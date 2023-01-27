@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import * as Http from "http";
 import errorHandler from "./middleware/errorHandler";
 import IRoute from "./model/interface/common/route.interface";
+import path from "path";
 
 export default class App {
 
@@ -25,6 +26,8 @@ export default class App {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(Cors());
     this.app.use(morgan("combined"))
+    this.app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+    this.app.use('/files', express.static('uploads'));
     this.app.use(errorHandler)
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       res.setHeader('Access-Control-Expose-Headers', 'original-name, Content-Disposition');

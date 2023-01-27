@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Bekhx/medium-lite#readme",
   "dependencies": {
+    "@redis/client": "^1.4.2",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -31,7 +32,8 @@
     "joi": "^17.7.0",
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
-    "pg": "^8.8.0"
+    "pg": "^8.8.0",
+    "redis": "^4.5.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

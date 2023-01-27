@@ -1,4 +1,4 @@
-import { ErrorEnum } from "../model/enums/error.enum";
+import { ErrorEnum } from "../model/enum/error.enum";
 import { Request, Response } from "express";
 import statusCodes from "http-status-codes";
 
