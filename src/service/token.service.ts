@@ -1,15 +1,12 @@
-import JWT, { JwtPayload } from 'jsonwebtoken';
-import { ITokenPairs } from "../model/interface/auth.model";
-import { redisClient } from "../database/redis.db";
+import JWT, {JwtPayload, Secret } from 'jsonwebtoken';
+import { IJwtPayload, ITokenPairs } from '../model/interface/auth.model';
+import { redisClient } from '../database/redis.db';
 
 export class TokenService {
 
-  static async generate(payload: { id: number }): Promise<ITokenPairs> {
-    const privateKey: string = Buffer.from(process.env.JWT_SECRET_KEY as string, 'base64').toString('utf-8');
-    const privateKeyRefresh: string = Buffer.from(process.env.JWT_REFRESH_SECRET_KEY as string, 'base64').toString('utf-8');
-
-    const accessToken = JWT.sign(payload, privateKey, { algorithm: 'RS256', expiresIn: process.env.JWT_ACCESS_EXPIRE });
-    const refreshToken = JWT.sign(payload, privateKeyRefresh, { algorithm: 'RS256', expiresIn: process.env.JWT_REFRESH_EXPIRE });
+  static async generate(payload: IJwtPayload): Promise<ITokenPairs> {
+    const accessToken = JWT.sign(payload, process.env.JWT_ACCESS_SECRET as Secret, { expiresIn: process.env.JWT_ACCESS_EXPIRE });
+    const refreshToken = JWT.sign(payload, process.env.JWT_REFRESH_SECRET as Secret, { expiresIn: process.env.JWT_REFRESH_EXPIRE });
 
     await redisClient.hSet('userTokens', payload.id, refreshToken);
 
@@ -19,15 +16,13 @@ export class TokenService {
     }
   }
 
-  static async verifyAccessToken(token: string): Promise<{ id: number }> {
-    const publicKey: string = Buffer.from(process.env.JWT_PUBLIC_KEY as string, 'base64').toString('utf-8');
-    const tokenData = await JWT.verify(token, publicKey, { algorithms: ["RS256"] }) as JwtPayload;
+  static async verifyAccessToken(token: string): Promise<IJwtPayload> {
+    const tokenData = await JWT.verify(token, process.env.JWT_ACCESS_SECRET as Secret) as JwtPayload;
     return { id: tokenData.id };
   }
 
-  static async verifyRefreshToken(token: string): Promise<{ id: number }> {
-    const publicKey = Buffer.from(process.env.JWT_REFRESH_PUBLIC_KEY as string, 'base64').toString('utf-8');
-    const tokenData = await JWT.verify(token, publicKey, { algorithms: ["RS256"] }) as JwtPayload;
+  static async verifyRefreshToken(token: string): Promise<IJwtPayload> {
+    const tokenData = await JWT.verify(token, process.env.JWT_REFRESH_SECRET as Secret) as JwtPayload;
     return { id: tokenData.id };
   }
 

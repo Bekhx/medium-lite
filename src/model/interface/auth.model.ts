@@ -1,5 +1,5 @@
-import {IUserDetails} from "./user.model";
-import {IPost} from "./post.model";
+import { IUserDetails } from './user.model';
+import { IPost } from './post.model';
 
 export interface IUserRegistration {
   email: string;
@@ -21,4 +21,8 @@ export interface ITokenPairs extends IRefreshToken {
 
 export interface IRefreshToken {
   refreshToken: string;
+}
+
+export interface IJwtPayload {
+  id: number;
 }

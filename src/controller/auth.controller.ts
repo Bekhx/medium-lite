@@ -12,7 +12,7 @@ export default class AuthController {
   static async registration(req: IValidatedRequest<IValidatedRequestBody<IUserRegistration>>, res: any) {
     try {
       // TODO check user for exists
-      req.body.password = await bcrypt.hash(req.body.password, 20);
+      req.body.password = await bcrypt.hash(req.body.password, 8);
       const userDetails = await AuthRepository.signup();
 
       const tokenPairs = await TokenService.generate({ id : 1 });
@@ -25,7 +25,6 @@ export default class AuthController {
       res.cookie('refreshToken', tokenPairs.refreshToken, { maxAge: process.env.JWT_REFRESH_EXPIRE_IN_MILLISECONDS as number | undefined, httpOnly: true })
       return res.status(statusCodes.CREATED).json(response);
     } catch (error: any) {
-      console.error('ERRRRROR: ', error);
       return ErrorService.error(res, error, error.status, error.message);
     }
   }
