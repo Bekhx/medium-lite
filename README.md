@@ -10,7 +10,7 @@ $ npm install -g nodemon
 
 ## Important!
 ###Before starting:
-Install docker-compose to your machine and start docker containers:
+Install Docker Desktop to your machine and start docker containers:
 ```bash
 $ docker-compose up
 ```
