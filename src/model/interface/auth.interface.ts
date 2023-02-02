@@ -1,7 +1,8 @@
-import { IUserDetails } from './user.model';
-import { IPost } from './post.model';
+import { IUserDetails } from './user.interface';
+import { IPostAttributes } from "../../entity/post.entity";
 
 export interface IUserRegistration {
+  name: string;
   email: string;
   password: string;
 }
@@ -12,7 +13,7 @@ export interface ILogin {
 }
 
 export interface IUserAuth extends IUserDetails, ITokenPairs {
-  posts?: IPost[] | []
+  posts?: IPostAttributes[] | []
 }
 
 export interface ITokenPairs extends IRefreshToken {

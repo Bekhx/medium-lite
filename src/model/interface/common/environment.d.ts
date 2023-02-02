@@ -10,6 +10,7 @@ declare global {
       JWT_REFRESH_EXPIRE: string;
       JWT_REFRESH_EXPIRE_IN_MILLISECONDS: number;
       REDIS_URL: string;
+      SQLITE_DB_PATH: string;
     }
   }
 }
