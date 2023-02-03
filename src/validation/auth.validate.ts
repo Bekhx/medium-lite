@@ -11,4 +11,8 @@ const login = Joi.object({
   password: Joi.string().min(6).max(15).required()
 });
 
-export { registration, login };
+const refreshToken = Joi.object({
+  refreshToken: Joi.string().required()
+});
+
+export { registration, login, refreshToken };

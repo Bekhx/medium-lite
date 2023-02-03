@@ -14,13 +14,24 @@ export default class AuthRepository {
 
   static async checkUserByEmail(email: string):Promise<IUserDetails | undefined> {
     const data = await User.findOne({ where: { email } });
-    if (data) {
-        return  {
-          id: data.dataValues.id!,
-          name: data.dataValues.name,
-          password: data.dataValues.password,
-          email: data.dataValues.email,
-        }
-    } else return  undefined;
+    if (!data) return  undefined;
+
+    return  {
+      id: data.dataValues.id!,
+      name: data.dataValues.name,
+      password: data.dataValues.password,
+      email: data.dataValues.email,
+    }
+  }
+
+  static async getUserById(id: number): Promise<IUserDetails | undefined> {
+    const userData = await User.findOne({ where: { id } })
+    if (!userData) return undefined;
+
+    return {
+      id: userData.dataValues.id!,
+      email: userData.dataValues.email,
+      name: userData.dataValues.name
+    };
   }
 }

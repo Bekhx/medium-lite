@@ -1,4 +1,4 @@
-import {IPostAttributes} from "../../entity/post.entity";
+import { IPostAttributes } from "../../entity/post.entity";
 
 export interface IUserDetails {
   id: number;

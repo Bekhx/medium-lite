@@ -1,4 +1,4 @@
-import JWT, {JwtPayload, Secret } from 'jsonwebtoken';
+import JWT, { JwtPayload, Secret } from 'jsonwebtoken';
 import { IJwtPayload, ITokenPairs } from '../model/interface/auth.interface';
 import { redisClient } from '../database/redis.db';
 

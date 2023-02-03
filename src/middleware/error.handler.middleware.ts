@@ -2,7 +2,7 @@ import { ErrorEnum } from "../model/enum/error.enum";
 import { Request, Response } from "express";
 import statusCodes from "http-status-codes";
 
-const errorHandler = (err: { error: { details: any; }; }, req: Request, res: Response, next: () => void) => {
+const errorHandlerMiddleware = (err: { error: { details: any; }; }, req: Request, res: Response, next: () => void) => {
 
   if (err.error && err.error.details) {
     const errors: { [index: string]: any } = {}
@@ -17,4 +17,4 @@ const errorHandler = (err: { error: { details: any; }; }, req: Request, res: Res
 
 };
 
-export default errorHandler;
+export default errorHandlerMiddleware;

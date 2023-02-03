@@ -1,7 +1,7 @@
 import AuthRepository from "../repository/auth.repository";
 import { IValidatedRequest } from "../model/request.model/validatedRequest.model";
 import { IValidatedRequestBody } from "../model/request.model/validatedRequestBody.model";
-import { ILogin, IUserAuth, IUserRegistration } from "../model/interface/auth.interface";
+import { ILogin, IRefreshToken, IUserAuth, IUserRegistration } from "../model/interface/auth.interface";
 import statusCodes from "http-status-codes";
 import { ErrorService } from "../service/error.service";
 import bcrypt from 'bcrypt';
@@ -28,7 +28,7 @@ export default class AuthController {
         ... tokenPairs
       }
 
-      res.cookie('refreshToken', tokenPairs.refreshToken, { maxAge: process.env.JWT_REFRESH_EXPIRE_IN_MILLISECONDS as number | undefined, httpOnly: true })
+      res.cookie('refreshToken', tokenPairs.refreshToken, { maxAge: process.env.JWT_REFRESH_EXPIRE_IN_MILLISECONDS, httpOnly: true })
       return res.status(statusCodes.CREATED).json(response);
     } catch (error: any) {
       return ErrorService.error(res, error, error.status, error.message);
@@ -41,10 +41,10 @@ export default class AuthController {
 
     try {
       const userByEmail = await AuthRepository.checkUserByEmail(email);
-      if (!userByEmail) return ErrorService.error(res, {}, statusCodes.UNAUTHORIZED, ErrorEnum.userEmailNotFound);
+      if (!userByEmail) return ErrorService.error(res, {}, statusCodes.UNPROCESSABLE_ENTITY, ErrorEnum.userEmailNotFound);
 
       const isPassword = userByEmail.password ? await bcrypt.compare(password, userByEmail.password) : null;
-      if (!isPassword) return ErrorService.error(res, {}, statusCodes.UNAUTHORIZED, ErrorEnum.invalidPassword);
+      if (!isPassword) return ErrorService.error(res, {}, statusCodes.UNPROCESSABLE_ENTITY, ErrorEnum.invalidPassword);
 
       const tokenPairs = await TokenService.generate({ id: userByEmail.id });
 
@@ -55,8 +55,39 @@ export default class AuthController {
         ... tokenPairs
       }
 
-      res.cookie('refreshToken', tokenPairs.refreshToken, { maxAge: process.env.JWT_REFRESH_EXPIRE_IN_MILLISECONDS as number | undefined, httpOnly: true })
+      res.cookie('refreshToken', tokenPairs.refreshToken, { maxAge: process.env.JWT_REFRESH_EXPIRE_IN_MILLISECONDS, httpOnly: true })
       return res.status(statusCodes.OK).json(response);
+    } catch (error: any) {
+      return ErrorService.error(res, error, error.status, error.message);
+    }
+  }
+
+  static async refreshToken(req: IValidatedRequest<IValidatedRequestBody<IRefreshToken>>, res: any) {
+    try {
+      const userData = await TokenService.verifyRefreshToken(req.body.refreshToken);
+      if (!userData || !userData.id) return ErrorService.error(res, {}, statusCodes.UNAUTHORIZED, ErrorEnum.invalidRefreshToken);
+
+      const refreshTokenFromDB = await TokenService.getRefreshTokenById(userData.id);
+      if (req.body.refreshToken !== refreshTokenFromDB) return ErrorService.error(res, {}, statusCodes.UNAUTHORIZED, ErrorEnum.invalidRefreshToken);
+
+      const tokenPairs = await TokenService.generate({ id: userData.id });
+
+      res.cookie('refreshToken', tokenPairs.refreshToken, { maxAge: process.env.JWT_REFRESH_EXPIRE_IN_MILLISECONDS, httpOnly: true })
+      return res.status(statusCodes.OK).json(tokenPairs);
+    } catch (error: any) {
+      return ErrorService.error(res, error, error.status, error.message);
+    }
+  }
+
+  static async logout(req: IValidatedRequest<IValidatedRequestBody<IRefreshToken>>, res: any) {
+    try {
+      const userData = await TokenService.verifyRefreshToken(req.body.refreshToken);
+      if (!userData || !userData.id) return ErrorService.error(res, {}, statusCodes.UNAUTHORIZED);
+
+      await TokenService.removeRefreshToken(userData.id);
+
+      res.clearCookie('refreshToken');
+      res.send({ success: true });
     } catch (error: any) {
       return ErrorService.error(res, error, error.status, error.message);
     }
