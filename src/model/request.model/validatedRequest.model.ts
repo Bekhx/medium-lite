@@ -7,6 +7,6 @@ export interface  IValidatedRequest<T extends ValidatedRequestSchema> extends Re
     query: T[ContainerTypes.Query] & ParsedQs;
     headers: T[ContainerTypes.Headers];
     params: T[ContainerTypes.Params];
-    userId: number | undefined;
-    file: any;
+    userId?: number;
+    file?: any;
 }

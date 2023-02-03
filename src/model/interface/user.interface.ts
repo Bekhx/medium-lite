@@ -8,6 +8,16 @@ export interface IUserDetails {
   password?: string;
 }
 
+export interface IGetAllUsers {
+  page: number;
+  size: number;
+}
+
+export interface IGetAllUsersData {
+  limit: number;
+  offset: number;
+}
+
 export interface IUserId {
   id: number;
 }
