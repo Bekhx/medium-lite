@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import IRoute from '../model/interface/common/route.interface';
-import statusCodes from "http-status-codes";
+import { StatusCodes} from 'http-status-codes';
 
 export default class IndexRoute implements IRoute {
   public path;
@@ -14,7 +14,7 @@ export default class IndexRoute implements IRoute {
 
   private initializeRoutes() {
     this.router.get(`/`, (req: Request, res: Response) => {
-      res.status(statusCodes.OK).json({
+      res.status(StatusCodes.OK).json({
         message: 'Server is running!'
       });
     });

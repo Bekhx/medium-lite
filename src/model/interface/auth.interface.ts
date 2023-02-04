@@ -1,5 +1,5 @@
 import { IUserDetails } from './user.interface';
-import { IPostAttributes } from "../../entity/post.entity";
+import { Post } from '../../entity/post.entity';
 
 export interface IUserRegistration {
   name: string;
@@ -13,7 +13,7 @@ export interface ILogin {
 }
 
 export interface IUserAuth extends IUserDetails, ITokenPairs {
-  posts?: IPostAttributes[] | []
+  posts?: Post[] | []
 }
 
 export interface ITokenPairs extends IRefreshToken {

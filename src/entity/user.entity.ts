@@ -1,16 +1,30 @@
-import {DataTypes, Model, Optional} from "sequelize";
-import { IPostAttributes } from "./post.entity";
-import db from "../database/sqlite.db";
+import {
+  Association,
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+  NonAttribute
+} from 'sequelize';
+import { Post } from './post.entity';
+import db from '../database/sqlite.db';
 
-interface IUserAttributes {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-  posts: IPostAttributes[] | []
+class User extends Model<InferAttributes<User, { omit: 'posts' }>, InferCreationAttributes<User, { omit: 'posts' }>> {
+  declare id: CreationOptional<number>;
+  declare name: string;
+  declare email: string;
+  declare password: string;
+
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+
+  declare posts?: NonAttribute<Post[]>;
+
+  declare static associations: {
+    projects: Association<User, Post>;
+  };
 }
-
-class User extends Model<Optional<IUserAttributes, 'id' | 'posts'>> {}
 
 User.init(
   {
@@ -20,11 +34,11 @@ User.init(
       autoIncrement: true
     },
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(128),
       allowNull: false
     },
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(128),
       allowNull: false,
       unique: true,
       validate: {
@@ -32,9 +46,11 @@ User.init(
       }
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(128),
       allowNull: false
-    }
+    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
   },
   {
     sequelize: db,
@@ -43,4 +59,4 @@ User.init(
   }
 );
 
-export { User, IUserAttributes };
+export { User };

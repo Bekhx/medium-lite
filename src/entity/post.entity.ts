@@ -1,15 +1,17 @@
-import {IUserAttributes, User} from "./user.entity";
-import {DataTypes, Model, Optional} from "sequelize";
-import db from "../database/sqlite.db";
+import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import db from '../database/sqlite.db';
+import { User } from './user.entity';
 
-interface IPostAttributes {
-  id: number;
-  title: string;
-  content: string;
-  author?: IUserAttributes
+class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
+  declare id: CreationOptional<number>;
+  declare title: string;
+  declare content: string;
+
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+
+  declare authorId: ForeignKey<User['id']>;
 }
-
-class Post extends Model<Optional<IPostAttributes, 'id'>> {}
 
 Post.init(
   {
@@ -20,13 +22,15 @@ Post.init(
       allowNull: false
     },
     title: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(500),
       allowNull: false
     },
     content: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(5000),
       allowNull: false
-    }
+    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
   },
   {
     sequelize: db,
@@ -35,7 +39,11 @@ Post.init(
   }
 );
 
-Post.belongsTo(User, { as: 'author' });
-User.hasMany(Post, { as: 'posts' });
+User.hasMany(Post, {
+  sourceKey: 'id',
+  foreignKey: 'authorId',
+  as: 'posts'
+});
 
-export { Post, IPostAttributes };
+
+export { Post };

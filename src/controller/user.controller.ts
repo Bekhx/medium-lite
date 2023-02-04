@@ -1,6 +1,6 @@
 import UserRepository from '../repository/user.repository';
 import { IValidatedRequest } from '../model/request.model/validatedRequest.model';
-import statusCodes from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import { ErrorService } from '../service/error.service';
 import { IGetAllUsersData, IGetAllUsers } from '../model/interface/user.interface';
 import { IValidatedRequestQuery } from '../model/request.model/validatedRequestQuery.model';
@@ -22,7 +22,7 @@ export default class UserController {
 
       const allUsers = await UserRepository.getAllUsers(allUsersData);
 
-      return res.status(statusCodes.OK).json(allUsers);
+      return res.status(StatusCodes.OK).json(allUsers);
     } catch (error: any) {
       return ErrorService.error(res, error, error.status, error.message);
     }

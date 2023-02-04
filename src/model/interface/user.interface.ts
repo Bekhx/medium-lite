@@ -1,23 +1,24 @@
-import { IPostAttributes } from "../../entity/post.entity";
+import { ILimitOffset, IPageSize } from './common/pagination.interface';
+import { User } from '../../entity/user.entity';
+import { Post } from '../../entity/post.entity';
 
 export interface IUserDetails {
   id: number;
   name: string;
   email: string;
-  posts?: IPostAttributes[] | []
+  posts?: Post[] | []
   password?: string;
 }
 
-export interface IGetAllUsers {
-  page: number;
-  size: number;
-}
+export interface IGetAllUsers extends IPageSize {}
 
-export interface IGetAllUsersData {
-  limit: number;
-  offset: number;
-}
+export interface IGetAllUsersData extends ILimitOffset {}
 
 export interface IUserId {
   id: number;
+}
+
+export interface IUsersList {
+  count: number;
+  users: User[];
 }

@@ -3,7 +3,7 @@ import IRoute from '../model/interface/common/route.interface';
 import UserController from '../controller/user.controller';
 import { createValidator } from 'express-joi-validation';
 import authMiddleware from '../middleware/auth.middleware';
-import { allUsers } from "../validation/user.validate";
+import { allUsers } from '../validation/user.validate';
 
 export default class UserRoute implements IRoute {
   public router: Router;

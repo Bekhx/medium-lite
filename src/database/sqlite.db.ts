@@ -6,6 +6,8 @@ const db = new Sequelize('medium', '', '', {
   logging: false
 });
 
+// db.sync option = { force: process.env.ENV === 'dev' }
+
 db.sync().then(() => console.log('Connected to sqlite database!'));
 
 export default db;
