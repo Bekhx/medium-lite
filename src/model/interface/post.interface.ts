@@ -10,6 +10,7 @@ export interface IPostCreateData {
   title: string;
   content: string;
   authorId: number;
+  readingTime: string;
 }
 
 export interface IPost {

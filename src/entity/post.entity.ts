@@ -11,6 +11,7 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
   declare updatedAt: CreationOptional<Date>;
 
   declare authorId: ForeignKey<User['id']>;
+  declare readingTime: string;
 }
 
 Post.init(
@@ -26,11 +27,12 @@ Post.init(
       allowNull: false
     },
     content: {
-      type: DataTypes.STRING(5000),
+      type: DataTypes.STRING(15000),
       allowNull: false
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
+    readingTime: DataTypes.STRING(10)
   },
   {
     sequelize: db,

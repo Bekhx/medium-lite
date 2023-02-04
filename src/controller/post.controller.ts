@@ -11,10 +11,12 @@ export default class PostController {
 
   static async create(req: IValidatedRequest<IValidatedRequestBody<IPostCreate>>, res: any) {
     try {
+      const readingTime = Math.round((req.body.content.length / 1500) * 100) / 100; // The average reading speed of an adult is 1500 characters per minute.
       const postData: IPostCreateData = {
         title: req.body.title,
         content: req.body.content,
-        authorId: req.userId!
+        authorId: req.userId!,
+        readingTime: `${readingTime} minute`
       }
 
       const post = await PostRepository.create(postData);

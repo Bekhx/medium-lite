@@ -2,7 +2,7 @@ import * as Joi from 'joi';
 
 const createPost = Joi.object({
   title: Joi.string().required(),
-  content: Joi.string().required()
+  content: Joi.string().max(15000).required()
 });
 
 const getUserPosts = Joi.object({

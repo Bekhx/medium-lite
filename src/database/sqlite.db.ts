@@ -6,7 +6,7 @@ const db = new Sequelize('medium', '', '', {
   logging: false
 });
 
-// db.sync option = { force: process.env.ENV === 'dev' }
+// db.sync option = { force: process.env.ENV === 'dev' }  -- to recreate tables on save
 
 db.sync().then(() => console.log('Connected to sqlite database!'));
 
